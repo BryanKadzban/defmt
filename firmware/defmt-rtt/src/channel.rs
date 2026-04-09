@@ -33,8 +33,11 @@ impl Channel {
         };
 
         while !bytes.is_empty() {
-            let consumed = write(self, bytes);
+            let mut consumed = write(self, bytes);
             if consumed != 0 {
+                if consumed > bytes.len() {
+                    consumed = bytes.len();
+                }
                 bytes = &bytes[consumed..];
             }
         }

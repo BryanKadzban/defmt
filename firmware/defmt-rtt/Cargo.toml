@@ -14,5 +14,5 @@ version = "1.1.0"
 disable-blocking-mode = []
 
 [dependencies]
-defmt = { version = "1", path = "../../defmt" }
+defmt = { version = "1" }
 critical-section = "1.2"
