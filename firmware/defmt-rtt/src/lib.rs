@@ -147,7 +147,10 @@ impl RttEncoder {
         // NB: You can re-enter critical sections but we need to make sure
         // no-one does that.
         if self.taken.load(Ordering::Relaxed) {
-            panic!("defmt logger taken reentrantly")
+            // panic!("defmt logger taken reentrantly")
+            unsafe {
+                core::arch::asm!("udf #0", options(noreturn, nomem, nostack, preserves_flags));
+            }
         }
 
         // no need for CAS because we are in a critical section
@@ -200,7 +203,10 @@ impl RttEncoder {
     /// `acquire`.
     unsafe fn release(&self) {
         if !self.taken.load(Ordering::Relaxed) {
-            panic!("defmt release out of context")
+            // panic!("defmt release out of context")
+            unsafe {
+                core::arch::asm!("udf #0", options(noreturn, nomem, nostack, preserves_flags));
+            }
         }
 
         // safety: accessing the cell is OK because we have acquired a critical
